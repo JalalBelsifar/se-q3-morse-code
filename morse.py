@@ -9,24 +9,51 @@ Pause between dots and dashes in a character – is 1 time unit long.
 Pause between characters inside a word – is 3 time units long.
 Pause between words – is 7 time units long.
 """
-__author__ = '???'
+__author__ = 'Jalal Belsifar with help from kevin'
 
 from morse_dict import MORSE_2_ASCII
+import re
+
+"""
+split decode_bits by zero.
+re split by whitespace.
+"""
 
 
 def decode_bits(bits):
-    # your code here
-    return
+
+    bits = bits.strip("0")
+    result = ''
+    split_to_bits = re.split('(0+)', bits)
+    units = len(sorted(split_to_bits, key=len)[0])
+    for match in split_to_bits:
+        if "1" in match:
+            if len(match) // units == 1:
+                result += "."
+            else:
+                result += "-"
+        else:
+            if len(match) // units == 3:
+                result += " "
+            elif len(match) // units == 7:
+                result += "   "
+    return result
 
 
 def decode_morse(morse):
-    # your code here
-    return
+    result = ''
+    morse_codex = re.split(r"(\s+)", morse)
+    for charset in morse_codex:
+        if charset == "   ":
+            result += " "
+        elif MORSE_2_ASCII.get(charset):
+            result += MORSE_2_ASCII[charset]
+    return result.strip()
 
 
 if __name__ == '__main__':
     hey_jude_morse = ".... . -.--   .--- ..- -.. ."
-    hey_jude_bits = "11001100110011000000110000001111110011001111110011111100000000000000000000011001111110011111100111111000000110011001111110000001111110011001100000011" # noqa
+    hey_jude_bits = "11001100110011000000110000001111110011001111110011111100000000000000000000011001111110011111100111111000000110011001111110000001111110011001100000011"  # noqa
 
     # Be sure to run all included unit tests, not just this one.
     print("Morse Code decoder test")
